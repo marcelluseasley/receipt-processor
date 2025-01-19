@@ -1,7 +1,6 @@
 package pointsprocessor
 
 import (
-	"fmt"
 	"math"
 	"strings"
 	"time"
@@ -45,19 +44,15 @@ func ProcessPoints(receipt models.Receipt) int {
 
 func processPurchaseTime(pTime time.Time) int {
 	if pTime.Hour() >= 14 && pTime.Hour() < 16 {
-		fmt.Println("processPurchaseTime: ", 10)
 		return 10
 	}
-	fmt.Println("processPurchaseTime: ", 0)
 	return 0
 }
 
 func processPurchaseDay(date time.Time) int {
 	if date.Day()%2 != 0 {
-		fmt.Println("processPurchaseDay: ", 6)
 		return 6
 	}
-	fmt.Println("processPurchaseDay: ", 0)
 	return 0
 }
 
@@ -69,7 +64,6 @@ func processDescription(items []models.Item) int {
 			total += int(math.Ceil(item.Price * 0.2))
 		}
 	}
-	fmt.Println("processDescription: ", total)
 	return total
 }
 
@@ -80,7 +74,6 @@ func processRetailerName(name string) int {
 			total += 1
 		}
 	}
-	fmt.Println("processRetailerName: ", total)
 	return total
 }
 
@@ -93,12 +86,10 @@ func processTotal(total float64) int {
 	if math.Mod(total, .25) == 0 {
 		sum += 25
 	}
-	fmt.Println("processTotal: ", sum)
 	return sum
 }
 
 func processEveryTwoItems(numItems int) int {
 	pairs := numItems / 2
-	fmt.Println("processEveryTwoItems: ", pairs*5)
 	return pairs * 5
 }

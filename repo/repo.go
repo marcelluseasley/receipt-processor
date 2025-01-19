@@ -2,7 +2,7 @@ package repo
 
 import (
 	"context"
-	"fmt"
+	"errors"
 )
 
 type Repository interface {
@@ -27,7 +27,7 @@ func (r *Repo) SavePoints(ctx context.Context, receiptId string, points int) {
 func (r *Repo) GetPoints(ctx context.Context, receiptId string) (int, error) {
 	points, ok := r.pointsDB[receiptId]
 	if !ok {
-		return -1, fmt.Errorf("No receipt found for that ID.")
+		return -1, errors.New("No receipt found for that ID.")
 	}
 	return points, nil
 }

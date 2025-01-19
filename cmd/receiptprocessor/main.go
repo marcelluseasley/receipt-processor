@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/marcelluseasley/receipt-processor/api/handlers"
 	"github.com/marcelluseasley/receipt-processor/api/models"
@@ -27,12 +27,21 @@ func main() {
 		port = "8080"
 	}
 
-	log.Infof("server started on port %s", port)
-	log.Fatal(newServer(port).ListenAndServe())
+	logger := logrus.New()
+
+	/*
+		Since the api.yml file only lists 2 types of errors,
+		we need to at least have logs show where the actual
+		problem occurs...hence, SetReportCaller
+	*/
+	logger.SetReportCaller((true))
+
+	fmt.Printf("server started on port %s", port)
+	logger.Fatal(newServer(port, logger).ListenAndServe())
 
 }
 
-func newServer(port string) *Server {
+func newServer(port string, logger *logrus.Logger) *Server {
 	router := chi.NewRouter()
 
 	// custom validations for the regex requirements (api.yml)
@@ -46,7 +55,7 @@ func newServer(port string) *Server {
 	// set up dependencies
 	db := repo.NewRepository()
 	rs := service.NewReceiptService(db)
-	h := handlers.NewHandler(rs, validate)
+	h := handlers.NewHandler(rs, validate, logger)
 
 	httpServer := &http.Server{
 		Addr:         fmt.Sprintf(":%s", port),

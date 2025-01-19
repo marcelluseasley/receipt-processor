@@ -11,7 +11,7 @@ import (
 )
 
 type Service interface {
-	ProcessReceipt(ctx context.Context, receipt models.Receipt) (models.ReceiptResponse, error)
+	ProcessReceipt(ctx context.Context, receipt models.Receipt) models.ReceiptResponse
 	GetPoints(ctx context.Context, receiptId string) (*models.PointsResponse, error)
 }
 
@@ -25,11 +25,11 @@ func NewReceiptService(db repo.Repository) Service {
 	}
 }
 
-func (s ReceiptService) ProcessReceipt(ctx context.Context, receipt models.Receipt) (models.ReceiptResponse, error) {
+func (s ReceiptService) ProcessReceipt(ctx context.Context, receipt models.Receipt) models.ReceiptResponse {
 
 	receiptId := uuid.New().String()
 	s.db.SavePoints(ctx, receiptId, pp.ProcessPoints(receipt))
-	return models.ReceiptResponse{Id: receiptId}, nil
+	return models.ReceiptResponse{Id: receiptId}
 }
 
 func (s ReceiptService) GetPoints(ctx context.Context, receiptId string) (*models.PointsResponse, error) {
